@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap');
+
+*{
+    margin:0;
+    box-sizing: border-box;
+    font-family: "Jost", sans-serif;
+  }
+  
+
+html{
+ width: 800px;
+ height: 500px;
+ background-image: url('assets/MissedImage.png');
+ background-position: right;
+ background-repeat: no-repeat;
+ background-size: cover;
+ display: grid;
+ overflow-x: hidden;
+ overflow-y: hidden;
+
+}
+
+body{
+    width: 800px;
+    height: 500px;
+   margin-top: 30%;
+   margin-left: 15%;
+   color: white;
+
+}
+

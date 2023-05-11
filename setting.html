@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Finsp</title>
+
+  <link rel="stylesheet" type="text/css" href="style2.css">
+
+</head>
+
+<body>
+  <div class="condition">
+    <h2>
+      Finsp ---------------------------------
+    </h2>
+
+    <form id="search-form">
+
+      <h1>
+        Where are you going to fish?
+      </h1>
+      <input type="text" id="search-input" placeholder=(Interest)>
+      <!-- <input type="text" id="place" name="place"> -->
+      <h1>
+        How long are you going to stay?
+      </h1>
+      <input type="range" id="time" name="time" class="slider" min="1" max="10" step="1">
+      <p><span id="timeValue"></span> minute</p>
+      <h1>
+        How many are you going to catch?
+      </h1>
+      <input type="range" id="many" name="many" class="slider" min="1" max="10" step="1">
+      <p><span id="manyValue"></span> fish</p>
+      <h1>
+        Which tool are you going to use?
+      </h1>
+      <input type="radio" name="tool" value="Fishing rod" checked />Fishing rod
+      <input type="radio" name="tool" value="Net" />Net</br>
+      <!-- <p id="toolResult">Selected tool:</p> -->
+      <h1>
+
+      </h1>
+      <h2>
+        ----------------------------------------------
+      </h2>
+
+      <!-- <button type="submit" id="search-button" onclick="start(); location.href = 'waiting.html';">Start fishing!</button> -->
+      <button type="submit" id="search-button">Start fishing!</button>
+    </form>
+  </div>
+</body>
+
+</html>
+
+
+<script src=" https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="node_modules/push.js/bin/push.min.js"></script>
+<script src="node_modules/push.js/bin/serviceWorker.min.js"></script>
+<script type="module" src="sketch.js"></script>
+<script>
+
+var nameChange = document.getElementById('search-button');
+  let timerCheck = false;
+  var timeSlider = document.getElementById('time');
+  var timeOutput = document.getElementById('timeValue');
+  // var timeToSecond = timeSlider.value * 60;
+  var timeToSecond;
+  var actualTime;
+  var timeSecond;
+  var toolCheck;
+  var fishingRodRandom;
+  timeOutput.innerHTML = timeSlider.value;
+  timeSlider.oninput = function () {
+    timeOutput.innerHTML = this.value;
+  }
+
+
+  var manySlider = document.getElementById('many');
+  var manyOutput = document.getElementById('manyValue');
+  var manyActual;
+  var searchAttemp = [];
+  var searchAttempNum = [];
+  manyOutput.innerHTML = manySlider.value;
+  manySlider.oninput = function () {
+    manyOutput.innerHTML = this.value;
+  }
+
+  let radioBtns = document.querySelectorAll("input[name='tool']");
+
+  const form = document.getElementById('search-form');
+  const input = document.getElementById('search-input');
+  let searchCheck = 0;
+  const searchTerm = input.value;
+
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault(); // prevent the form from submitting normally
+    nameChange.innerHTML = "Fishing..."
+
+
+
+    /////////////Change below 2 lines for actual timer and demo timer!
+    timeToSecond = timeSlider.value *60;  //last timer value(change for debug)
+    // timeToSecond = 5;
+    manyActul = manySlider.value;
+    for(let i = 0; i<manyActual-1; i++){
+      searchAttempt[i] = Math.random()*25;
+      searchAttempNum[i] = searchAttempt[i];
+    }
+
+    actualTime = Math.floor(Math.random() * timeToSecond) + 1;
+    timeSecond = actualTime;
+    console.log("tiemToSecond = " + timeToSecond);
+    console.log('actualTime = ' + actualTime);
+    console.log('input.value = ' + input.value);
+    searchCheck = 1;
+    console.log('searchCheck = ' + searchCheck);
+  });
+
+  setInterval(countDown, 1000);
+  function countDown() {
+    // console.log(actualTime);
+    timeSecond--;
+    console.log('Current time is ' + timeSecond);
+    if (timeSecond < 0) {
+      start();
+      timeSecond = 9999999999999;
+      // timerCheck = true;
+      // console.log('Now timerCheck is '+timerCheck);
+    }
+  }
+
+
+
+
+  var newWin;
+
+  function start() {
+    let selected = document.querySelector("input[name='tool']:checked").value;
+    if (selected == 'Fishing rod') {
+      toolCheck = 0;
+      fishingRodRandom = (Math.random() * 2) % 2;
+      // console.log('this is fishing rod!!!!');
+      console.log('Catch? no? is ' + fishingRodRandom);
+    } else {
+      toolCheck = 1;
+    }
+
+    console.log("Push on loading");
+    if (toolCheck == 0) {
+      if (fishingRodRandom <= 1) {   //Success!
+        Push.create(input.value, {
+          body: "Something hit the rod...!",
+          // icon: data.result.results[10].image_url,
+          icon: 'https://www.shutterstock.com/image-vector/fish-icon-trendy-flat-style-260nw-1401715109.jpg',
+          // icon: 'https://cdn-icons-png.flaticon.com/512/48/48968.png',
+          timeout: 100000,
+          onClick: function () {
+            window.focus();
+            newWin = window.open('getcha.html', 'About us', 'width=800, height=500');
+            document.onmousedown = focusPopup;
+            document.onkeyup = focusPopup;
+            document.onmousemove = focusPopup;
+
+            this.close();
+          }
+        });
+      } else {
+        Push.create(input.value, {  //Fail...
+          body: "Something hit the rod...!",
+          // icon: data.result.results[10].image_url,
+          icon: 'https://www.shutterstock.com/image-vector/fish-icon-trendy-flat-style-260nw-1401715109.jpg',
+          // icon: 'https://cdn-icons-png.flaticon.com/512/48/48968.png',
+          timeout: 100000,
+          onClick: function () {
+            window.focus();
+            newWin = window.open('fail.html', 'About us', 'width=800, height=500');
+            document.onmousedown = focusPopup;
+            document.onkeyup = focusPopup;
+            document.onmousemove = focusPopup;
+
+            this.close();
+          }
+        });
+      }
+    }else{
+      Push.create(input.value, {  //Fail...
+          body: "You got it!",
+          // icon: data.result.results[10].image_url,
+          icon: 'https://www.shutterstock.com/image-vector/fish-icon-trendy-flat-style-260nw-1401715109.jpg',
+          // icon: 'https://cdn-icons-png.flaticon.com/512/48/48968.png',
+          timeout: 100000,
+          onClick: function () {
+            window.focus();
+            newWin = window.open('getcha.html', 'About us', 'width=800, height=500');
+            document.onmousedown = focusPopup;
+            document.onkeyup = focusPopup;
+            document.onmousemove = focusPopup;
+
+            this.close();
+          }
+        });
+    }
+
+  }
+  function focusPopup() {
+    if (!newWin.close) {
+      newWin.focus();
+    }
+  }
+</script>
